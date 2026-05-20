@@ -1,0 +1,10 @@
+target/
+*.class
+*.jar
+*.log
+*.lck
+nbactions.xml
+dependency-reduced-pom.xml
+.idea/
+*.iml
+nb-configuration.xml
