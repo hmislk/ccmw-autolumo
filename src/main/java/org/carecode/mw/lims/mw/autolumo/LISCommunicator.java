@@ -57,19 +57,25 @@ public class LISCommunicator {
                 in.close();
                 logger.debug("[PULL] Response body: {}", response);
                 DataBundle result = gson.fromJson(response.toString(), DataBundle.class);
-                if (result != null && result.getOrderRecords() != null) {
-                    logger.info("[PULL] Got {} order record(s)", result.getOrderRecords().size());
+                int orderCount = (result != null && result.getOrderRecords() != null)
+                        ? result.getOrderRecords().size() : 0;
+                if (orderCount > 0) {
+                    logger.info("[PULL] Got {} order record(s)", orderCount);
                 } else {
                     logger.warn("[PULL] Response parsed but orderRecords is null/empty");
                 }
+                ConnectionStatus.get().limsPullOk(queryRecord.getSampleId(), orderCount);
                 return result;
             } else {
                 logErrorBody(conn, code, elapsed, "[PULL]");
+                ConnectionStatus.get().limsPullFailed(queryRecord.getSampleId(), "HTTP " + code);
             }
         } catch (java.net.SocketTimeoutException e) {
             logger.error("[PULL] Timeout waiting for LIMS: {}", e.getMessage());
+            ConnectionStatus.get().limsPullFailed(queryRecord.getSampleId(), "timeout");
         } catch (Exception e) {
             logger.error("[PULL] Exception: {}", e.getMessage(), e);
+            ConnectionStatus.get().limsPullFailed(queryRecord.getSampleId(), e.getMessage());
         }
         return null;
     }
@@ -106,13 +112,24 @@ public class LISCommunicator {
             long elapsed = System.currentTimeMillis() - t0;
             logger.info("[PUSH] Response code={} elapsed={}ms", code, elapsed);
 
-            if (code != HttpURLConnection.HTTP_OK) {
+            String sampleId = db.getQueryRecords() != null && !db.getQueryRecords().isEmpty()
+                    ? db.getQueryRecords().get(0).getSampleId() : "?";
+            if (code == HttpURLConnection.HTTP_OK) {
+                ConnectionStatus.get().limsPushOk(sampleId, db.getResultsRecords().size());
+            } else {
                 logErrorBody(conn, code, elapsed, "[PUSH]");
+                ConnectionStatus.get().limsPushFailed(sampleId, "HTTP " + code);
             }
         } catch (java.net.SocketTimeoutException e) {
             logger.error("[PUSH] Timeout waiting for LIMS: {}", e.getMessage());
+            String sampleId = db.getQueryRecords() != null && !db.getQueryRecords().isEmpty()
+                    ? db.getQueryRecords().get(0).getSampleId() : "?";
+            ConnectionStatus.get().limsPushFailed(sampleId, "timeout");
         } catch (Exception e) {
             logger.error("[PUSH] Exception: {}", e.getMessage(), e);
+            String sampleId = db.getQueryRecords() != null && !db.getQueryRecords().isEmpty()
+                    ? db.getQueryRecords().get(0).getSampleId() : "?";
+            ConnectionStatus.get().limsPushFailed(sampleId, e.getMessage());
         }
     }
 
