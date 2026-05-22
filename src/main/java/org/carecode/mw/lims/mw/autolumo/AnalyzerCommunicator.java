@@ -37,14 +37,14 @@ public class AnalyzerCommunicator {
 
         if (patient != null) {
             sb.append("[S]").append(escape(nvl(patient.getPatientId()))).append(",");
-            sb.append("[S]").append(escape(nvl(patient.getPatientName()))).append(",");
-            sb.append("[S]").append(escape(nvl(patient.getPatientSecondName()))).append(",");
+            sb.append("[S]").append(escapeName(nvl(patient.getPatientName()))).append(",");
+            sb.append("[S]").append(escapeName(nvl(patient.getPatientSecondName()))).append(",");
             sb.append(genderCode(patient.getPatientSex())).append(",");
             sb.append("0,");   // age – not in PatientRecord
             sb.append("[S],"); // department
             sb.append("[S],"); // inpatient area
             sb.append("[S],"); // bed no
-            sb.append("[S]").append(escape(nvl(patient.getAttendingDoctor()))).append(",");
+            sb.append("[S]").append(escapeName(nvl(patient.getAttendingDoctor()))).append(",");
             sb.append("[S],"); // submitting date
             sb.append("[S],"); // inspector
             sb.append("[S],"); // notes
@@ -125,6 +125,16 @@ public class AnalyzerCommunicator {
 
     private static String escape(String s) {
         return s == null ? "" : s.replace(",", ";");
+    }
+
+    /** Extra sanitization for free-text fields (names, addresses) that may contain
+     *  characters the analyzer parser cannot handle (periods, multiple spaces). */
+    private static String escapeName(String s) {
+        if (s == null) return "";
+        return s.replace(",", ";")
+                .replace(".", "")
+                .replaceAll("\\s+", " ")
+                .trim();
     }
 
     private static String nvl(String s) {
