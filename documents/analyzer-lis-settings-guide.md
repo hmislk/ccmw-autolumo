@@ -36,7 +36,7 @@ This document explains every parameter in the analyzer's **LIS connection settin
 | **Flow control** | None | RS-232 flow control. Not used in TCP mode. | None |
 | **Data bit** | 8 | RS-232 data bits. Not used in TCP mode. | 8 |
 | **Stop bit** | 1.5 | RS-232 stop bits. Not used in TCP mode. | 1.5 |
-| **Number of LIS communication timeouts allowed** | 1 (min 1, max 5) | How many consecutive TCP timeouts the analyzer tolerates before showing an error. | **3** — gives the middleware a couple of retries before alarming without waiting too long |
+| **Number of LIS communication timeouts allowed** | 5 (min 1, max 5) | How many consecutive TCP timeouts the analyzer tolerates before showing an error. | **3** — gives the middleware a couple of retries before alarming without waiting too long |
 | **LIS gripper protocol switch** | × (disabled) | Enables a gripper/robot automation sub-protocol. Not needed for standard middleware use. | **OFF (×)** |
 | **Send test results by string** | × (disabled) | If ON, the concentration field in Cmd 5/7 is sent as a plain string instead of a float with `F` suffix. The middleware's `stripSuffix()` handles both, but OFF (standard float format) is safer. | **OFF (×)** |
 
