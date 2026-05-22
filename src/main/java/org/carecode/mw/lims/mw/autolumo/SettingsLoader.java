@@ -11,7 +11,7 @@ public class SettingsLoader {
 
     private static final Logger logger = LogManager.getLogger(SettingsLoader.class);
     private static MiddlewareSettings middlewareSettings;
-    private static final String CONFIG_PATH = "D:\\ccmw\\settings\\autolumo\\config.json";
+    private static final String CONFIG_PATH = "D:\\ccmv\\settings\\autolumo\\config.json";
 
     public static void loadSettings() {
         Gson gson = new Gson();
