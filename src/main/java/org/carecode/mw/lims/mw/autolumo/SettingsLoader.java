@@ -16,7 +16,7 @@ public class SettingsLoader {
     private static boolean diagnosticsEnabled = false;
     private static int     diagnosticsPort    = 8765;
 
-    private static final String CONFIG_PATH = "D:\\ccmw\\settings\\autolumo\\config.json";
+    private static final String CONFIG_PATH = "D:\\ccmv\\settings\\autolumo\\config.json";
 
     public static void loadSettings() {
         Gson gson = new Gson();
