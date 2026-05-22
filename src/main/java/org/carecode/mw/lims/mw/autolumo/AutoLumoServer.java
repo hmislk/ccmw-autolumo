@@ -147,7 +147,7 @@ public class AutoLumoServer {
 
         DataBundle db = fetchOrders(sampleNo);
         if (db == null || db.getOrderRecords().isEmpty()) {
-            return "{2,1,[S]" + sampleNo + "}";
+            return "{2, 1, [S]" + sampleNo + "}";
         }
         return AnalyzerCommunicator.buildCmd2Response(sampleNo,
                 db.getPatientRecord(), db.getOrderRecords().get(0));
@@ -164,7 +164,7 @@ public class AutoLumoServer {
 
         DataBundle db = fetchOrders(sampleNo);
         if (db == null || db.getOrderRecords().isEmpty()) {
-            return "{10,1,[S]" + sampleNo + "}";
+            return "{10, 1, [S]" + sampleNo + "}";
         }
         return AnalyzerCommunicator.buildCmd10Response(sampleNo,
                 db.getPatientRecord(), db.getOrderRecords().get(0));
