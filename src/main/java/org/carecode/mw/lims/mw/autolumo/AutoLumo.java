@@ -45,6 +45,10 @@ public class AutoLumo {
             return;
         }
 
+        if (SettingsLoader.isDiagnosticsEnabled()) {
+            new DiagnosticsServer().start(SettingsLoader.getDiagnosticsPort());
+        }
+
         int port = SettingsLoader.getSettings().getAnalyzerDetails().getAnalyzerPort();
         new AutoLumoServer().start(port);
     }

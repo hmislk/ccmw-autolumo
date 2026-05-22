@@ -36,7 +36,6 @@ public class AutoLumoServer {
             while (true) {
                 try {
                     Socket client = serverSocket.accept();
-                    logger.info("Analyzer connected from {}", client.getInetAddress().getHostAddress());
                     Thread t = new Thread(() -> handleClient(client));
                     t.setDaemon(true);
                     t.start();
@@ -64,6 +63,8 @@ public class AutoLumoServer {
     // ---- per-connection handler ----
 
     private void handleClient(Socket client) {
+        String address = client.getInetAddress().getHostAddress();
+        ConnectionStatus.get().analyzerConnected(address);
         try (InputStream in = client.getInputStream();
              OutputStream out = client.getOutputStream()) {
 
@@ -82,9 +83,11 @@ public class AutoLumoServer {
                     buf.append(c);
                     String raw = buf.toString();
                     logger.info("[RX] {}", raw);
+                    ConnectionStatus.get().analyzerMessage("RX", raw);
                     String response = dispatch(raw);
                     if (response != null) {
                         logger.info("[TX] {}", response);
+                        ConnectionStatus.get().analyzerMessage("TX", response);
                         out.write(response.getBytes("UTF-8"));
                         out.flush();
                     }
@@ -99,6 +102,7 @@ public class AutoLumoServer {
         } finally {
             try { client.close(); } catch (IOException ignored) {}
             logger.info("Analyzer disconnected");
+            ConnectionStatus.get().analyzerDisconnected();
         }
     }
 
