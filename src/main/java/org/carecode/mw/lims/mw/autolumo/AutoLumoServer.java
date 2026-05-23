@@ -210,7 +210,8 @@ public class AutoLumoServer {
             db.setPatientRecord(pr);
         }
 
-        LISCommunicator.pushResults(db);
+        boolean pushOk = LISCommunicator.pushResults(db);
+        ResultLogger.log(completionTime, sampleNo, itemNo, conc, pushOk);
 
         return AnalyzerCommunicator.buildCmd6Ack(0, testReqId, sampleNo, patientNo, itemNo);
     }
@@ -244,7 +245,10 @@ public class AutoLumoServer {
                     "", "", "AutoLumo", sampleNo));
         }
 
-        LISCommunicator.pushResults(db);
+        boolean pushOk = LISCommunicator.pushResults(db);
+        for (ResultsRecord rr : db.getResultsRecords()) {
+            ResultLogger.log("", rr.getSampleId(), rr.getTestCode(), rr.getResultValueString(), pushOk);
+        }
 
         return AnalyzerCommunicator.buildCmd8Ack(0, sampleId, sampleNo, "");
     }

@@ -80,7 +80,7 @@ public class LISCommunicator {
         return null;
     }
 
-    public static void pushResults(DataBundle db) {
+    public static boolean pushResults(DataBundle db) {
         logger.info("[PUSH] Pushing {} result(s) to LIMS", db.getResultsRecords().size());
         for (ResultsRecord rr : db.getResultsRecords()) {
             logger.info("[PUSH]  sampleId={} testCode={} value={}",
@@ -116,9 +116,11 @@ public class LISCommunicator {
                     ? db.getQueryRecords().get(0).getSampleId() : "?";
             if (code == HttpURLConnection.HTTP_OK) {
                 ConnectionStatus.get().limsPushOk(sampleId, db.getResultsRecords().size());
+                return true;
             } else {
                 logErrorBody(conn, code, elapsed, "[PUSH]");
                 ConnectionStatus.get().limsPushFailed(sampleId, "HTTP " + code);
+                return false;
             }
         } catch (java.net.SocketTimeoutException e) {
             logger.error("[PUSH] Timeout waiting for LIMS: {}", e.getMessage());
@@ -131,6 +133,7 @@ public class LISCommunicator {
                     ? db.getQueryRecords().get(0).getSampleId() : "?";
             ConnectionStatus.get().limsPushFailed(sampleId, e.getMessage());
         }
+        return false;
     }
 
     private static void logErrorBody(HttpURLConnection conn, int code, long elapsed, String tag) {
