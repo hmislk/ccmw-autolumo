@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 .idea/
 *.iml
 nb-configuration.xml
+autolumo_log/
