@@ -26,30 +26,30 @@ public class AnalyzerCommunicator {
     public static String buildCmd2Response(String sampleNo, PatientRecord patient, OrderRecord order) {
         if (order == null) {
             logger.warn("[CMD2] No order found for sampleNo={}, responding with error", sampleNo);
-            return "{2,1,[S]" + escape(sampleNo) + "}";
+            return "{2, 1, [S]" + escape(sampleNo) + "}";
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("{2,0,");
-        sb.append("[S]").append(escape(sampleNo)).append(",");
-        sb.append("1,");   // dilution factor – default 1x
-        sb.append("0,");   // ordinary sample (not emergency)
+        sb.append("{2, 0, ");
+        sb.append("[S]").append(escape(sampleNo)).append(", ");
+        sb.append("1, ");   // dilution factor – default 1x
+        sb.append("0, ");   // ordinary sample (not emergency)
 
         if (patient != null) {
-            sb.append("[S]").append(escape(nvl(patient.getPatientId()))).append(",");
-            sb.append("[S]").append(escapeName(nvl(patient.getPatientName()))).append(",");
-            sb.append("[S]").append(escapeName(nvl(patient.getPatientSecondName()))).append(",");
-            sb.append(genderCode(patient.getPatientSex())).append(",");
-            sb.append("0,");   // age – not in PatientRecord
-            sb.append("[S],"); // department
-            sb.append("[S],"); // inpatient area
-            sb.append("[S],"); // bed no
-            sb.append("[S]").append(escapeName(nvl(patient.getAttendingDoctor()))).append(",");
-            sb.append("[S],"); // submitting date
-            sb.append("[S],"); // inspector
-            sb.append("[S],"); // notes
+            sb.append("[S]").append(escape(nvl(patient.getPatientId()))).append(", ");
+            sb.append("[S]").append(escapeName(nvl(patient.getPatientName()))).append(", ");
+            sb.append("[S]").append(escapeName(nvl(patient.getPatientSecondName()))).append(", ");
+            sb.append(genderCode(patient.getPatientSex())).append(", ");
+            sb.append("0, ");   // age – not in PatientRecord
+            sb.append("[S], "); // department
+            sb.append("[S], "); // inpatient area
+            sb.append("[S], "); // bed no
+            sb.append("[S]").append(escapeName(nvl(patient.getAttendingDoctor()))).append(", ");
+            sb.append("[S], "); // submitting date
+            sb.append("[S], "); // inspector
+            sb.append("[S], "); // notes
         } else {
-            sb.append("[S],[S],[S],0,0,[S],[S],[S],[S],[S],[S],[S],");
+            sb.append("[S], [S], [S], 0, 0, [S], [S], [S], [S], [S], [S], [S], ");
         }
 
         appendTestItems(sb, order.getTestNames());
@@ -65,20 +65,20 @@ public class AnalyzerCommunicator {
     public static String buildCmd10Response(String sampleNo, PatientRecord patient, OrderRecord order) {
         if (order == null) {
             logger.warn("[CMD10] No order found for sampleNo={}, responding with error", sampleNo);
-            return "{10,1,[S]" + escape(sampleNo) + "}";
+            return "{10, 1, [S]" + escape(sampleNo) + "}";
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append("{10,0,");
-        sb.append("[S]").append(escape(sampleNo)).append(",");
-        sb.append("1,");  // dilution factor
-        sb.append("0,");  // ordinary sample
-        sb.append("0,");  // sample type: 0=Serum (default)
+        sb.append("{10, 0, ");
+        sb.append("[S]").append(escape(sampleNo)).append(", ");
+        sb.append("1, ");  // dilution factor
+        sb.append("0, ");  // ordinary sample
+        sb.append("[S]0, ");  // sample type: 0=Serum (String per spec)
 
         if (patient != null) {
-            sb.append("[S]").append(escape(nvl(patient.getPatientId()))).append(",");
+            sb.append("[S]").append(escape(nvl(patient.getPatientId()))).append(", ");
         } else {
-            sb.append("[S],");
+            sb.append("[S], ");
         }
 
         appendTestItems(sb, order.getTestNames());
@@ -91,26 +91,26 @@ public class AnalyzerCommunicator {
      * Cmd 6 – acknowledge a result sent by test (Cmd 5).
      */
     public static String buildCmd6Ack(int errorCode, int testReqId, String sampleNo, String patientNo, String itemNo) {
-        return "{6," + errorCode + "," + testReqId
-                + ",[S]" + escape(sampleNo)
-                + ",[S]" + escape(patientNo)
-                + ",[S]" + escape(itemNo) + "}";
+        return "{6, " + errorCode + ", " + testReqId
+                + ", [S]" + escape(sampleNo)
+                + ", [S]" + escape(patientNo)
+                + ", [S]" + escape(itemNo) + "}";
     }
 
     /**
      * Cmd 8 – acknowledge a result sent by sample (Cmd 7).
      */
     public static String buildCmd8Ack(int errorCode, int sampleId, String sampleNo, String patientNo) {
-        return "{8," + errorCode + "," + sampleId
-                + ",[S]" + escape(sampleNo)
-                + ",[S]" + escape(patientNo) + "}";
+        return "{8, " + errorCode + ", " + sampleId
+                + ", [S]" + escape(sampleNo)
+                + ", [S]" + escape(patientNo) + "}";
     }
 
     /**
      * Cmd 12 – respond to Cmd 11 (version request).
      */
     public static String buildCmd12VersionResponse(String version) {
-        return "{12,0,[S]" + escape(version) + "}";
+        return "{12, 0, [S]" + escape(version) + "}";
     }
 
     // ---- helpers ----
@@ -118,8 +118,8 @@ public class AnalyzerCommunicator {
     private static void appendTestItems(StringBuilder sb, List<String> testNames) {
         sb.append(testNames.size());
         for (String testName : testNames) {
-            sb.append(",[S]").append(escape(testName));
-            sb.append(",1");  // default dilution ratio = 1
+            sb.append(", [S]").append(escape(testName));
+            sb.append(", 1");  // default dilution ratio = 1
         }
     }
 
