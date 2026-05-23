@@ -36,16 +36,14 @@ public class ResultLogger {
             + repeat('-', W_SAMPLE_ID)      + "+"
             + repeat('-', W_TEST_CODE)      + "+"
             + repeat('-', W_RESULT)         + "+"
-            + repeat('-', W_SAMPLE_SEND_AT) + "+"
-            + repeat('-', W_STATUS)         + "+";
+            + repeat('-', W_SAMPLE_SEND_AT) + "+";
 
         HDR_ROW = "|"
             + cell("Result_At",        W_RESULT_AT)      + "|"
             + cell("Sample ID",        W_SAMPLE_ID)      + "|"
             + cell("Test Code",        W_TEST_CODE)      + "|"
             + cell("Result",           W_RESULT)         + "|"
-            + cell("Sample Send At",   W_SAMPLE_SEND_AT) + "|"
-            + cell("LIS Send Status",  W_STATUS)         + "|";
+            + cell("Sample Send At",   W_SAMPLE_SEND_AT) + "|";
     }
 
     /**
@@ -84,8 +82,7 @@ public class ResultLogger {
                     + cell(nvl(sampleId),          W_SAMPLE_ID)      + "|"
                     + cell(nvl(testCode),          W_TEST_CODE)      + "|"
                     + cell(nvl(result),            W_RESULT)         + "|"
-                    + cell(sampleSendTime,         W_SAMPLE_SEND_AT) + "|"
-                    + cell(pushSuccess ? "SUCCESS" : "FAILED", W_STATUS) + "|";
+                    + cell(sampleSendTime,         W_SAMPLE_SEND_AT) + "|";
 
                 pw.println(dataRow);
                 pw.println(SEP);
