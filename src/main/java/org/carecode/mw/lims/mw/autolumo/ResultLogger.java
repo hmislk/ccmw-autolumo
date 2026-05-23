@@ -14,7 +14,7 @@ public class ResultLogger {
 
     private static final Logger logger = LogManager.getLogger(ResultLogger.class);
 
-    private static final String LOG_DIR = "autolumo_log/result_log";
+    private static final String LOG_DIR = "middlewere_logs/autolumo_log/result_log";
     private static final DateTimeFormatter DATE_TITLE   = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final DateTimeFormatter DATETIME_FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
