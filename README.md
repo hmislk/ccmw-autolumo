@@ -66,3 +66,7 @@ SettingsLoader.java      – reads config.json into MiddlewareSettings
 ```
 
 Depends on [`lims-middleware-libraries`](https://github.com/hmislk/lims-middleware-libraries) (via JitPack).
+
+## Licence
+
+This project is licensed under the Apache License 2.0. See [LICENSE](LICENSE).
